@@ -274,6 +274,7 @@ public class Character : MonoBehaviour
         }
     }
 
+    
     List<SpiralWeapon> _weaponList = new List<SpiralWeapon>();
 
     public void CreateWeapon()

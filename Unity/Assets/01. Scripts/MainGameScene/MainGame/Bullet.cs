@@ -81,4 +81,5 @@ public class Bullet : MonoBehaviour
     {
         _angleRate = angleRate;
     }
+   
 }
