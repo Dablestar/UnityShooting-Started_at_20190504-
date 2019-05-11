@@ -1,0 +1,51 @@
+데이터구조를 작성할때는 눈에 보이지 않는 컴퓨터 내에서의 처리도 생각해야한다.
+대부분 언어(C#, 자바, 파이썬)에서 기본제공하는 기능을 사용하며, if, for같은 알고리즘은 직접 작성한다.
+
+
+템플릿
+Add라는 함수를 만들었을때
+ex.
+Add(int a, int b)
+{ 
+return a + b ;
+}
+
+Add(float a, float b)
+{
+return a + b ;
+}
+
+uint
+double
+....
+
+Add 10개
+최악-> 10개 다 만듬
+중타-> Ctrl C + Ctrl V★
+최상-> Templete<int>, Add (T a, b); (중타부분의 자동화)
+ex. Add<int>(a, b);
+
+
+만들 탄환 종류
+
+방향탄 (Directional)
+
+주요 파라미터:
+
+
+소용돌이 탄 (Spiral)
+
+주요 파라미터:
+
+다방향 소용돌이 탄(Multiple Spiral)
+
+주요 파라미터:
+
+소용돌이 방향 바꾸기(Interval Multiple Spiral)
+발사각을 음수로 줌
+
+양방향 소용돌이(BI-Directional Spiral)
+
+주요 파라미터:
+
+선회가속 소용돌이탄(Bent Spiral)

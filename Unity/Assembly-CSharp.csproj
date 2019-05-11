@@ -76,6 +76,7 @@
     <Compile Include="Assets\01. Scripts\MainGameScene\MainGame\Character\State\State.cs" />
     <Compile Include="Assets\01. Scripts\MainGameScene\MainGame\Character\State\WaitState.cs" />
     <Compile Include="Assets\01. Scripts\MainGameScene\MainGame\Character\State\WalkState.cs" />
+    <Compile Include="Assets\01. Scripts\MainGameScene\MainGame\Character\Weapon\SpiralWeapon.cs" />
     <Compile Include="Assets\01. Scripts\MainGameScene\UI\MainGameCanvas.cs" />
     <Compile Include="Assets\UnityChan\Scripts\AutoBlink.cs" />
     <Compile Include="Assets\UnityChan\Scripts\CameraController.cs" />

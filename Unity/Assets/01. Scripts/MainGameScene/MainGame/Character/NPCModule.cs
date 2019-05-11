@@ -28,6 +28,6 @@ public class NPCModule : CharacterModule
         base.UpdateAI();
 
         // 총알 발사
-        //_character.Fire();
+        _character.Fire();
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Character : MonoBehaviour
@@ -8,18 +7,18 @@ public class Character : MonoBehaviour
 
     [SerializeField] RuntimeAnimatorController _animatorController;
     
-   public  enum CharType
+    public enum CharType
     {
         Player,
         NPC
     }
 
-    public CharType GetCharType()
-    {
-
-    }
-    CharType charType;
     [SerializeField] CharType _charType = CharType.NPC;
+
+	public CharType GetCharacterType()
+	{
+		return _charType;
+	}
 
     List<CharacterModule> _charModuleList = new List<CharacterModule>();
     CharacterModule _characterModule = null;
@@ -73,10 +72,14 @@ public class Character : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        CreateWeapon();
+
         _characterModule = _charModuleList[(int)_charType];
         _characterModule.BuildStateList();
     }
+
     
+
     // Update is called once per frame
     void Update()
     {
@@ -86,89 +89,46 @@ public class Character : MonoBehaviour
 
             UpdateState();
             UpdateMove();
-        }        
-        //만든 총알들을 이동
-            //시간이 지나면 삭제
-            //충돌 처리
-    }
+        }
+	}
 
-    float _hp = 100.0f;
-
-    void OnTriggerEnter(Collider other)
+	float _hp = 100.0f;
+	void OnTriggerEnter(Collider other)
     {
+		if (eState.DEATH == _stateType)
+			return;
 
-        if(eState.DEATH == _stateType)
-        {
-            return;
-        }
-        // 충돌 시 룰
-        if (other.gameObject.Equals(gameObject))
-            return;
+		// 캐릭터
+			// tag가 총알 태그이면
+			// other.gameObject 에서 총알 스크립트 컴포넌트를 뽑아냄
+			// 총알 스크립트의 쏜 객체 정보 조사
+			// 그 정보가 나이면 패스
+			// tag가 총알 태그이면
+		
+		//if (other.gameObject.Equals(gameObject))
+        //    return;
+		// 내가 쏜 총알일 때 패스
+		if(true == other.gameObject.tag.Equals("Bullet"))
+		{
+			Bullet bullet = other.gameObject.GetComponent<Bullet>();
+			if (_charType == bullet.ShotCharacterType())
+				return;
+		}
 
-
-        if (other.gameObject.tag.Equals("Bullet"))
-        {
-
-        }
-
-        if(_hp <= 0.0f)
-        {
-            ChangeState(eState.DEATH);
-        }
-        else
-        {
-            _hp--;
-        }
-       /* switch (_stateType)
-        {
-            case eState.WALK:
-            case eState.RUN:
-            case eState.SLIDE:
-                ChangeState(eState.IDLE);
-                break;
-        }*/
+		if(_hp <= 0.0f)
+		{
+			ChangeState(eState.DEATH);
+		}
+		else
+		{
+			_hp-=10;
+		}
     }
 
     void OnTriggerExit(Collider other)
     {
-        // 내가 쏜 총알일때는
-        //캐릭터
-            // tag가 총알태그이면
-            // other.gameObject 에서 총알 스크립트 컴포넌트를 뽑아냄
-            // 총알 스크립트의 쏜 객체 정보 조사
-            // 그 정보가 나이면 패스
-       //총알
-            //tag가 캐릭터이면
-                //other.gameObject에서 캐릭터 스크립트 컴포넌트를 뽑아냄
-                //죽었으면, 패스
-            //tag가 건물이면
-                //other.gameObject에서 건물 스크립트 컨포넌트를 뽑아냄
-                //파괴되었으면, 패스
-
-       //우리 게임에서 사용하는 게임 오브젝트인가?
-            //공통된 스크립트 컴포넌트를 뽑아냄.
-            //컴포넌트가 충돌 가능한가를 체크.
-            //충돌 또는 패스
-            
-        
-        if (other.gameObject.tag.Equals("Bullet"))
-        {
-            Bullet bullet = other.gameObject.GetComponent<Bullet>();
-            if (Bullet.IsPlayer())
-            {
-                if(CharType.Player == _charType)
-                {
-                    return;
-                }
-            }
-            else
-            {
-                if(CharType.NPC == _charType)
-                {
-                    return;
-                }
-            }
-        }
+        // 내가 쏜 총알일 때 패스
+        if (other.gameObject.Equals(gameObject))
             return;
     }
 
@@ -302,19 +262,60 @@ public class Character : MonoBehaviour
 
     [SerializeField] GameObject _bulletPrefab;
 
-   // float _curTestRot = 0;
-    public void Fire(float x)
+    float _curTestRot = 0;      // 임시 변수
+
+    //SpiralWeapon _spiralWeapon1 = null;
+    //SpiralWeapon _spiralWeapon2 = null;
+	public void Fire()
     {
-        // 총알을 생성
-        GameObject bulletObject = GameObject.Instantiate<GameObject>(_bulletPrefab);
-        Vector3 bulletPos = transform.position + (transform.forward * 1.2f) + (transform.up * 1.3f);
-        bulletObject.transform.position = bulletPos;
-        bulletObject.transform.rotation = transform.rotation;
+        for(int i=0; i<_weaponList.Count; i++)
+        {
+            _weaponList[i].Fire(_bulletPrefab);
+        }
+    }
 
+    List<SpiralWeapon> _weaponList = new List<SpiralWeapon>();
 
-        Bullet bullet = bulletObject.GetComponent<Bullet>();
-        bullet.setShotCharacterType(_charType);
+    public void CreateWeapon()
+    {
+        _weaponList.Clear();
 
-       // _curTestRot += 10;
+        {
+            SpiralWeapon spiralWeapon1 = new SpiralWeapon();
+            spiralWeapon1.SetOwner(this);
+            spiralWeapon1.SetAngleRate(10.0f);
+            spiralWeapon1.setBulletSpeedRate(5.0f);
+            spiralWeapon1.setBulletAngleRate(5.0f);
+            _weaponList.Add(spiralWeapon1);
+
+        }
+        {
+            SpiralWeapon spiralWeapon2 = new SpiralWeapon();
+            spiralWeapon2.SetOwner(this);
+            spiralWeapon2.SetAngleRate(5.0f);
+            spiralWeapon2.setBulletSpeedRate(5.0f);
+            spiralWeapon2.setBulletAngleRate(5.0f);
+            _weaponList.Add(spiralWeapon2);
+
+        }
+        {
+            SpiralWeapon spiralWeapon3 = new SpiralWeapon();
+            spiralWeapon3.SetOwner(this);
+            spiralWeapon3.SetAngleRate(-5.0f);
+            spiralWeapon3.setBulletSpeedRate(5.0f);
+            spiralWeapon3.setBulletAngleRate(5.0f);
+            _weaponList.Add(spiralWeapon3);
+
+        }
+        {
+            SpiralWeapon spiralWeapon4 = new SpiralWeapon();
+            spiralWeapon4.SetOwner(this);
+            spiralWeapon4.SetAngleRate(-10.0f);
+            spiralWeapon4.setBulletSpeedRate(5.0f);
+            spiralWeapon4.setBulletAngleRate(5.0f);
+            _weaponList.Add(spiralWeapon4);
+        }
+
+        
     }
 }
