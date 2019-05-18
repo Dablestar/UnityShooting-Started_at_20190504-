@@ -1,0 +1,37 @@
+* if(interval <= duration){
+ 
+*  duration = 0.0f;
+ 
+* }
+
+* duration += Time.deltaTime;
+//시간을 체크하는 주요 알고리즘. Update()에 위치한다
+A is a B : 상속
+A has a B : 조합
+/*
+        _spiralWeapon1.Fire(_bulletPrefab);
+        _spiralWeapon2.Fire(_bulletPrefab);
+        if (_shotSpeed <= _shotDuration)
+        {
+            _shotDuration = 0.0f;
+
+            for(int i=0; i< _shotCount; i++)
+            {
+                float shotAngle = _shotAngle + (360.0f * (float)i / (float)_shotCount);
+                CreateBullet(shotAngle);
+            }
+            
+            _shotAngle += _shotAngleRate;
+        }
+        _shotDuration += Time.deltaTime;
+*/
+
+1대1 대치 O
+보스 5인연속.
+보스 처치시 다음 보스가 등장.
+보스의 탄막이 점점 어려워짐.
+5인을 다 이기면 승리
+
+1. 구조체 생성
+2. 구조체 값 세팅 후 Set
+3. 
